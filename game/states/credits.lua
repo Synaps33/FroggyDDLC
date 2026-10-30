@@ -12,7 +12,7 @@ function loadCredits(x)
 	if x ~= 1 then
 		logo = lgnewImage('assets/images/cg/credits/ddlc.jpg')
 		m1 = lg.newFont('assets/fonts/m1.ttf',30) --monika poem font
-		halogenfont = lg.newFont('assets/fonts/Halogen.ttf',28) --poem game font
+		halogenfont = lg.newFont('assets/fonts/Halogen.ttf',(g_system == 'Handheld') and 36 or 28) --poem game font
 		audioUpdate('credits')
 		c_timer = 0
 	end

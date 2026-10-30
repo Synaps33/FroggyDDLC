@@ -1,59 +1,212 @@
-<div align="center">
-  <img src="https://github.com/LukeZGD/DDLC-LOVE/raw/ddlclove/logo.png"/>
-  <h1>DDLC-LOVE</h1>
-  <h3>Will you write the way into her heart?</h3>
-</div>
+# FroggyDDLC
 
-- **DDLC-LOVE** is a Doki Doki Literature Club port programmed in Lua for the **Nintendo Switch, 3DS, Sony PS Vita, PSP, and PS3!**
-- **This port is unofficial and is not affiliated with Team Salvato. Please support the official game. You can download Doki Doki Literature Club at: https://ddlc.moe**
-- **For the full experience of the game on the PC, Switch, and other consoles, please support Team Salvato and buy Doki Doki Literature Club Plus! Get the official console versions at: https://ddlc.plus**
+An unofficial, complete port of **Doki Doki Literature Club!** to the Data Frog
+**GB300** and **SF2000** handhelds.
 
-## Downloads:
-- [PS Vita v1.2.3 (.vpk)](https://github.com/LukeZGD/DDLC-LOVE/releases/download/v1.2.3/DDLC-LOVE.vpk)
-- [LÖVE v1.2.3 (.love)](https://github.com/LukeZGD/DDLC-LOVE/releases/download/v1.2.3/DDLC-LOVE.love)
-- [PSP v1.2.3 (.zip)](https://github.com/LukeZGD/DDLC-LOVE/releases/download/v1.2.3/DDLC-LOVE-PSP.zip)
-- [Other systems](https://github.com/LukeZGD/DDLC-LOVE/releases/v1.1.9) (not recommended)
+FroggyDDLC runs the full DDLC-LOVE 1.2.3 game data (all acts, poems, choices,
+menus, saves and original assets) on a small LÖVE-SF2000 software runtime. It
+does not require an operating system, SDL, OpenGL or a hardware FPU.
 
-## Notes:
-- With better ways to play DDLC on Switch and Vita platforms, DDLC-LOVE is no longer needed, and it will not be updated anymore.
-- For the PS Vita, I recommend using [Doki-Doki-Literature-Club-Vita](https://github.com/SonicMastr/Doki-Doki-Literature-Club-Vita) instead of DDLC-LOVE for the full desktop version (in Ren'Py) with support for mods.
-- For the Switch, support Team Salvato and buy DDLC Plus! The original DDLC (in Ren'Py) can also be run with Switchroot Ubuntu or Android with support for mods.
-- Limited support for PSP, Switch, 3DS, and PS3. Playing the DDLC-LOVE versions for these systems is not recommended. For more details, see [#123](https://github.com/LukeZGD/DDLC-LOVE/issues/123)
-- DDLC-LOVE is not compatible with any existing mods and translations. Also, DDLC-LOVE is a port of the free base game only. Content from DDLC Plus will not be ported over to DDLC-LOVE. If you want DDLC Plus content, please support Team Salvato and buy the game from the official platforms.
+> This is a fan project. It is not affiliated with or endorsed by Team Salvato.
+> Please support the official game: <https://ddlc.moe>.
 
-## Usage:
-- **PS Vita** - Install the `.vpk` using [VitaShell](https://github.com/TheOfficialFloW/VitaShell). You can now run DDLC-LOVE from the home screen
-- **LÖVE** - Run the LÖVE executable (`.love`) using LÖVE versions 0.10.2 and newer
-- **PSP** - Download the `.zip` for the PSP version, and extract the folder with `EBOOT.PBP` to your memory stick at `ms0:/PSP/GAME/`. You can now run DDLC-LOVE from the XMB
-- **Switch** - Run the `.nro` with [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere) title takeover functionality. The LÖVE executable (`.love`) may also be used. More details can be found in [lovebrew](https://lovebrew.org/#/packaging)
-- **3DS .3dsx** - Put the `.3dsx` to the `3ds` folder on the root of your SD card. You can now run DDLC-LOVE from [The Homebrew Launcher](https://github.com/fincs/new-hbmenu)
-- **3DS .cia** - Install the `.cia`  using [FBI](https://github.com/Steveice10/FBI). You can now run DDLC-LOVE from the home menu
-- **PS3:**
-  1. Download the `.zip` for the PS3 version.
-  2. Extract all files of the `.zip` to the root of a compatible USB drive to be used for the PS3, and install `Lua Player PS3.pkg` (you need CFW/[HEN](https://www.psx-place.com/threads/update-ps3hen-v3-0-0-view-latest-changes-to-the-ps3-exploit-for-superslims-noncfw-models.23955/) to get Package Manager). This only needs to be done once for setting up
-  3. To run the game, insert the USB drive to the [rightmost USB slot](https://postimg.cc/jnryRhtb) and launch Lua Player PS3 from the XMB 
+![Title screen](screenshots/03_title.png)
 
+## Download and install
 
-## Locations of save files:
-- You can reset the save data and start over by deleting the save file folder. This is also mentioned in the help menu ingame.
+Download the package for your console from the
+[Releases](https://github.com/Synaps33/FroggyDDLC/releases/latest) page:
 
-| Platform | Location                            |
-|----------|-------------------------------------|
-| PS Vita  | ux0:/data/DDLC-LOVE/savedata/       |
-| PSP      | ms0:/PSP/GAME/DDLC-LOVE/savedata/   |
-| Switch   | sdmc:/switch/DDLC-LOVE/             |
-| 3DS      | sdmc:/3ds/data/DDLC-LOVE/           |
-| PS3      | dev_usb000:/DDLC-LOVE/savedata/     |
-| Other    | see [love.filesystem](https://love2d.org/wiki/love.filesystem)|
+| Console | Package |
+| --- | --- |
+| GB300 | `FroggyDDLC-GB300.zip` |
+| SF2000 | `FroggyDDLC-SF2000.zip` |
 
-## Building:
-- For v1.2.1 and newer, game assets are to be extracted from the latest release
-- Game assets from the [DDLC-LOVE-Assets](https://github.com/LukeZGD/DDLC-LOVE-Assets) repo are only to be used for v1.2.0 and older
-- For all Sony devices, [LOVE-WrapLua](https://github.com/LukeZGD/LOVE-WrapLua) is also required beside the game folder (`index.lua`, `script.lua`, and the `LOVE-WrapLua` folder). See the contents of the Vita, PSP, and PS3 versions for the directory tree (`.vpk` and `.zip` releases)
+The packages contain the correct core, the complete game data, the launcher
+stub, the game-list entry and the thumbnail.
 
-### Credits:
-- [LovePotion](https://github.com/TurtleP/LovePotion) by TurtleP is used for the Switch and 3DS versions
-- [lpp-vita](https://github.com/Rinnegatamante/lpp-vita/) by Rinnegatamante is used for the PS Vita version
-- [OneLua](http://onelua.x10.mx/) by OneLua Team is used for the PSP version
-- [Lua Player PS3](https://store.brewology.com/ahomebrew.php?brewid=212) by 3141card is used for the PS3 version
-- [Spanish translation](https://tradusquare.es/ficha.php?ddlc) by GlowTranslations
+1. Format the SD card as **FAT32**.
+2. Extract the package to the **root** of the SD card and merge the folders.
+3. Insert the card, open FrogUI and launch **`ROMS/ddlc/DDLC.gba`**.
+4. If the entry is not visible, refresh/regenerate the ROM list in FrogUI.
+
+No BIOS or additional runtime installation is required. The console must
+already be running the multicore firmware used by FrogUI.
+
+### Resulting SD layout
+
+```text
+system/Deimos/cores/ddlc.sf2k     core
+cores/ddlc/core_87000000          core copy used by some launchers
+ROMS/ddlc/                        game data
+ROMS/ddlc/DDLC.gba                launcher stub
+ROMS/ddlc/ddlc.sf2k               core copy next to the game
+ROMS/ddlc/DDLC.rgb565             thumbnail
+ROMS/DDLC.gba                     optional top-level shortcut
+configs/custom_cores/ddlc/games.opt
+```
+
+The installer script from the repository can also do this automatically:
+
+```bash
+./install_to_sd.sh /media/<user>/<SD_CARD>
+# Force a device if the mount path is ambiguous:
+DEVICE=SF2000 ./install_to_sd.sh /media/<user>/<SD_CARD>
+```
+
+Existing save files in `ROMS/ddlc/` are not overwritten.
+
+## Controls
+
+| Button | Action |
+| --- | --- |
+| A | Advance text / confirm |
+| B | Hide the text window / back / delete |
+| Y | Open the pause menu / toggle Caps Lock in the name keyboard |
+| X | Toggle the text outline |
+| START | Toggle auto-forward |
+| SELECT | Toggle the text outline |
+| D-Pad | Move the selection / scroll |
+
+The name-entry keyboard is a dedicated 320x240 screen with on-screen
+`Space`, `Delete`, `Enter` and `Caps` keys.
+
+## Saves
+
+Saves are written next to the game data:
+
+```text
+ROMS/ddlc/persistent          player name and persistent choices
+ROMS/ddlc/settings.sav        volume, text speed and language
+ROMS/ddlc/saveXX-Y.sav        save slots
+```
+
+To start over, back up and delete `persistent` (and optionally the
+`save*.sav` files). Deleting `persistent` makes the game ask for the player
+name again on the next New Game.
+
+## What is included
+
+* All four DDLC acts, the poem minigame, choices, special events, history,
+  save/load and settings.
+* English and Spanish scripts from DDLC-LOVE 1.2.3.
+* Original DDLC assets, pre-scaled for the 320x240 screen to reduce memory use.
+* A 320x240 handheld UI: dialogue box, choices, pause, settings, save/load,
+  history, help, poem list and a full-screen name keyboard.
+* Streaming OGG music and sound effects with a 2-tap anti-alias resampler,
+  exact 22.05 kHz output and a mono-friendly mix.
+* Soft-float MIPS cores with **zero** hardware floating-point instructions.
+
+### Why not Ren'Py?
+
+DDLC was built with Ren'Py, which needs Python, SDL2 and an OpenGL/GLES
+renderer. The SF2000/GB300 firmware provides none of these and has no hardware
+FPU. A direct Ren'Py port would mean porting an operating system, Python, SDL
+and a software GPU stack. FroggyDDLC instead runs the complete DDLC-LOVE game
+data on the lightweight LÖVE-SF2000 runtime. The story, assets and menus are
+the complete game; this is not a shortened remake.
+
+## Building from source
+
+### Prerequisites
+
+* Linux with a 32-bit-capable GCC toolchain for the host tests.
+* The `mipsel-mti-elf` Frog toolchain.
+* The `sf2000_multicore` source tree and its patched BIOS assets.
+* The DDLC assets, which are not stored in this Git repository.
+
+The Makefile contains the toolchain and multicore paths at the top. Adjust
+them if your checkout is elsewhere.
+
+### Get the game assets
+
+Download `FroggyDDLC-GameData.zip` from the release page and extract it in the
+repository root. It creates the `game/` tree with `main.lua`, `assets/` and
+all scripts. The Git repository already contains the Lua/engine code, so the
+archive only needs to fill in the assets.
+
+Alternatively, extract `ROMS/ddlc/` from a full device package and copy its
+contents into `game/`.
+
+### Host tests
+
+```bash
+make native          # native libretro core
+make test            # autopilot; writes screenshots/
+```
+
+The host runner is useful for smoke tests, text wrapping, menu navigation and
+WAV audio checks. It is not a substitute for testing on real hardware.
+
+### Console cores
+
+```bash
+make gb300-core      # build/core_87000000_gb300v2
+make sf2000-core     # build/core_87000000_sf2000
+make dist            # dist/DDLC_GB300V2.gb3k + dist/DDLC_SF2000.sf2k
+```
+
+Both cores are linked with `-msoft-float`. To verify the GB300/SF2000
+binaries:
+
+```bash
+mipsel-mti-elf-objdump -d build/core.elf | \
+  grep -cE '\b(mul|add|sub|cvt|div)\.s|mtc1|mfc1|lwc1|swc1'
+# expected: 0
+```
+
+The Makefile cleans the multicore build directory between device targets; do
+not link the GB300 and SF2000 archives into one core.
+
+## Technical notes
+
+* Display: 320x240 RGB565, 4:3, 60 fps libretro timing.
+* The original 1280x720 scenes are scaled to the panel. Handheld UI elements
+  are drawn in physical pixels, not in the scaled 1280x720 space.
+* Images are pre-scaled by 2x and drawn back at 2x to cut decode time and
+  source-image memory by roughly 4x.
+* Audio: 44.1 kHz OGG sources are resampled to 22.05 kHz with a 16.16
+  fixed-point interpolator and a 2-tap anti-alias average when downsampling.
+  The core emits 367 or 368 frames per video frame, averaging exactly
+  22,050 Hz.
+* The frontend mono mix sums left and right in 32 bits before shifting.
+* Saves are plain Lua tables written through `love.filesystem`.
+
+## Troubleshooting
+
+**The game is not in the menu.**
+Refresh the ROM list in FrogUI, or copy `ROMS/ddlc/DDLC.gba` again. Make sure
+the core is at `system/Deimos/cores/ddlc.sf2k` and the data is in
+`ROMS/ddlc/`.
+
+**The game starts and returns to the menu.**
+Check the core path and that `ROMS/ddlc/main.lua` exists. The core looks for
+`main.lua` in the game directory.
+
+**No sound.**
+Set the console volume and the in-game volume in Settings. The game writes
+`settings.sav` next to the data.
+
+**Saves from an older install.**
+The installer preserves `persistent`, `settings.sav` and `save*.sav`. To see
+the name-entry screen again, back up and remove `persistent`.
+
+**The image is stretched.**
+The handheld panel is 4:3; the original 16:9 artwork is scaled to fill it. The
+UI is laid out for 320x240.
+
+## Credits and licenses
+
+* **DDLC-LOVE** by LukeZGD and contributors — game scripts and port code,
+  GNU GPL v3. This repository is a fork of the DDLC-LOVE code base:
+  <https://github.com/LukeZGD/DDLC-LOVE>.
+* **love-sf2000** and the SF2000/GB300 LÖVE runtime — the engine and
+  libretro frontend foundation.
+* **Doki Doki Literature Club!** and all characters, artwork, music and other
+  assets — copyright Team Salvato. The assets are included for this
+  non-commercial fan port and are not covered by the GPL.
+* Lua 5.1 (MIT), miniz, stb_image, stb_truetype and stb_vorbis under their
+  respective permissive licenses.
+
+See `NOTICE.md` and `LICENSE` for details. This software is provided as-is,
+without warranty of any kind.

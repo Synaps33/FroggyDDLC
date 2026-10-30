@@ -17,7 +17,18 @@ function drawSplash()
 		
 	elseif state == 'splash2' then --splash2 (Disclaimer)
 		lg.setColor(0,0,0, alpha)
-		if persistent.ptr == 2 and random_msgchance == 0 then
+		if g_system == 'Handheld' then
+			lg.push()
+			lg.origin()
+			lg.setFont(ui_aller14)
+			if persistent.ptr == 2 and random_msgchance == 0 then
+				lg.print(wrap(tr.splash[random_msg],42), 20, 86)
+			else
+				lg.print(tr.splash[13], 25, 100)
+				lg.print(tr.splash[14], 33, 122)
+			end
+			lg.pop()
+		elseif persistent.ptr == 2 and random_msgchance == 0 then
 			lg.print(tr.splash[random_msg], 440, 300)
 		else
 			lg.print(tr.splash[13], 440, 300)
@@ -32,15 +43,39 @@ function drawSplash()
 		lg.draw(menu_bg, posX, posY)
 		lg.draw(gui.sidebar,-720+titlebg_ypos,0)
 		drawSplashChar()
-		lg.draw(gui.mainbuttons)
-		if persistent.ptr == 1 and gui.newgame1 then
-			lg.draw(gui.newgame1)
-		elseif gui.newgame then
-			lg.draw(gui.newgame)
+		if g_system == 'Handheld' then
+			lg.push()
+			lg.origin()
+			lg.setFont(ui_aller14)
+			local items = {'New Game','Load Game','Settings','Help','Quit'}
+			local ty = 128
+			for i=1,5 do
+				local sel = (m_selected == i+1)
+				if sel then
+					lg.setColor(255,150,205,alpha)
+					lg.rectangle('fill', 6, ty-2, 142, 20, 4, 4)
+					lg.setColor(255,255,255,alpha)
+				else
+					lg.setColor(80,0,50,alpha)
+				end
+				lg.print(items[i], 14, ty)
+				ty = ty + 22
+			end
+			lg.setFont(ui_aller12)
+			lg.setColor(90,30,70,alpha)
+			lg.print('DDLC-LOVE '..dversion, 200, 8)
+			lg.pop()
+		else
+			lg.draw(gui.mainbuttons)
+			if persistent.ptr == 1 and gui.newgame1 then
+				lg.draw(gui.newgame1)
+			elseif gui.newgame then
+				lg.draw(gui.newgame)
+			end
+			lg.setColor(64,64,64,alpha)
+			lg.print(tr.splash[16],splashx,10)
+			menu_draw()
 		end
-		lg.setColor(64,64,64,alpha)
-		lg.print(tr.splash[16],splashx,10)
-		menu_draw()
 		if keyboard then keyboard_draw() end
 	end
 	lg.setColor(0,0,0,255)

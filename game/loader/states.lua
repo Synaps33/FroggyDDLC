@@ -85,7 +85,7 @@ function changeState(cstate,x)
 		require('states/game')
 		cl = 10016
 	elseif cstate == 'poemgame' then --load poemgame assets and state
-		halogenfont = lg.newFont('assets/fonts/Halogen.ttf',28) --poem game font
+		halogenfont = lg.newFont('assets/fonts/Halogen.ttf',(g_system == 'Handheld') and 36 or 28) --poem game font
 		if persistent.ptr <= 2 then --acts 1 and 2
 			audioUpdate('4',true)
 			bg1 = 'notebook'

@@ -21,6 +21,39 @@ function wrap(str, limit)
 	return str:gsub("(%s+)()(%S+)()", check)
 end
 
+local function wrapPixels(str, font, maxw)
+	local lines = {}
+	local line = ''
+	for word in string.gmatch(str, "%S+") do
+		local candidate = (line == '') and word or (line..' '..word)
+		if line ~= '' and font:getWidth(candidate) > maxw then
+			lines[#lines+1] = line
+			line = word
+		else
+			line = candidate
+		end
+	end
+	if line ~= '' then lines[#lines+1] = line end
+	return table.concat(lines, '\n')
+end
+
+local function wrapHandheld(str)
+	local maxw = 301
+	local t = wrapPixels(str, ui_aller, maxw)
+	local lines = 1 + select(2, string.gsub(t, "\n", "\n"))
+	c_disp_font = ui_aller
+	if lines > 3 and ui_aller14 then
+		t = wrapPixels(str, ui_aller14, maxw)
+		lines = 1 + select(2, string.gsub(t, "\n", "\n"))
+		c_disp_font = ui_aller14
+		if lines > 4 and ui_aller12 then
+			t = wrapPixels(str, ui_aller12, maxw)
+			c_disp_font = ui_aller12
+		end
+	end
+	return t
+end
+
 function cw(p1, stext, tag)
 	if p1 == 's' then
 		ct = tr.names[1]
@@ -96,7 +129,15 @@ function cw(p1, stext, tag)
 		c_a1 = {65,140,210}
 	end
 	
-	c_disp[1] = wrap(textx,c_a1[1])
+	if style_edited and g_system == 'Handheld' and ui_mono then
+		c_disp[1] = wrapPixels(textx, ui_mono, 301)
+		c_disp_font = ui_mono
+	elseif g_system == 'Handheld' and ui_aller then
+		c_disp[1] = wrapHandheld(textx)
+	else
+		c_disp[1] = wrap(textx,(g_system == 'Handheld') and 42 or c_a1[1])
+		c_disp_font = nil
+	end
 	
 	local slen = string.len(stext)
 	if tag then
@@ -122,6 +163,7 @@ end
 
 function scriptCheck()
 	c_disp = {'','','',''}
+	c_disp_font = nil
 	
 	if poemsread ~= -1 and poemresponses and script_poemresponsesx then
 		poemresponses()

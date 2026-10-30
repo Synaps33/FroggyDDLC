@@ -3,20 +3,48 @@ if love.getVersion() >= 11 then
 end
 lg = love.graphics
 
---local lgnewImage = lg.newImage
+local imgscale = setmetatable({}, {__mode = "k"})
+local scaled_prefixes = {
+	'assets/images/bg/',
+	'assets/images/cg/',
+	'assets/images/sayori/',
+	'assets/images/yuri/',
+	'assets/images/natsuki/',
+	'assets/images/monika/',
+	'assets/images/poem_special/'
+}
+
 function lgnewImage(new)
-	--print('lgnewImage: '..new)
 	if love.filesystem.getInfo(new) then
 		local img = lg.newImage(new)
-        --love.filesystem.append("logfile",'lgnewImage: '..img..' '..new)
-        return img
+		if img then
+			for i = 1, #scaled_prefixes do
+				if new:sub(1, #scaled_prefixes[i]) == scaled_prefixes[i] then
+					imgscale[img] = 2
+					break
+				end
+			end
+		end
+		return img
 	end
 end
 
 local lgdraw = lg.draw
-function lg.draw(drawable, ...)
-	if drawable then
-		lgdraw(drawable, ...)
+lg.draw_raw = lgdraw
+function lg.draw(drawable, x, y, r, sx, sy, ox, oy)
+	if not drawable then return end
+	local s = imgscale[drawable]
+	if s then
+		local osx = sx or 1
+		local osy = sy or osx
+		x = x or 0
+		y = y or 0
+		r = r or 0
+		if ox then ox = ox * s end
+		if oy then oy = oy * s end
+		lgdraw(drawable, x, y, r, osx * s, osy * s, ox, oy)
+	else
+		lgdraw(drawable, x, y, r, sx, sy, ox, oy)
 	end
 end
 
@@ -49,8 +77,10 @@ if g_system ~= "Vita" then
 	function Font.unload()
 		return
 	end
-	function Graphics.freeImage()
-		return
+	function Graphics.freeImage(img)
+		if type(img) == "userdata" and img.release then
+			pcall(img.release, img)
+		end
 	end
 else
 	freeimage_old = Graphics.freeImage
@@ -196,27 +226,103 @@ function drawTextBox()
 	end
 	
 	if menu_type ~= 'choice' and not poem_enabled then
-		lg.setColor(255,255,255,alpha)
-		if ct ~= '' then lg.draw(namebox, xps.namebox, yps.namebox) end
-		lg.draw(textbox, xps.textbox, yps.textbox)
-		if print_full_text then lg.draw(gui.ctc, gui_ctc_x, 685) end
-		
-		lg.setColor(0,0,0,alpha)
-		lg.setFont(rifficfont)
-		outlineText(ct,xps.ct,yps.ct,'ct')
-		
-		if style_edited then
-			lg.setFont(dfnt)
+		if g_system == 'Handheld' then
+			lg.push()
+			lg.origin()
+			lg.setColor(255,255,255,alpha)
+			if ct ~= '' and namebox then
+				lg.draw(namebox, 8, 136, 0, 116/168, 28/39)
+			end
+			if textbox then
+				lg.draw(textbox, 2, 164, 0, 316/816, 72/146)
+			end
+			if ct ~= '' then
+				lg.setFont(ui_riffic)
+				outlineText(ct, 17, 140, 'ct')
+			end
+			if c_disp[1] then
+				local lines = 1 + select(2, string.gsub(c_disp[1], "\n", "\n"))
+				if style_edited then
+					lg.setFont(ui_mono)
+				elseif c_disp_font then
+					lg.setFont(c_disp_font)
+				elseif lines > 3 then
+					lg.setFont(ui_aller14)
+				else
+					lg.setFont(ui_aller)
+				end
+				if lines > 4 and not style_edited and not c_disp_font then lg.setFont(ui_aller12) end
+				outlineText(c_disp[1], 17, 171, 'c_disp')
+			end
+			if print_full_text and gui.ctc then
+				lg.draw(gui.ctc, 300, 221, 0, 0.7, 0.7)
+			end
+			lg.pop()
 		else
-			lg.setFont(allerfont)
-		end
-		if g_system == 'PSP' then
-			xps.c = 240
-		end
-		if c_disp[1] then
-			outlineText(c_disp[1],xps.c,yps.c[1],'c_disp')
+			lg.setColor(255,255,255,alpha)
+			if ct ~= '' then lg.draw(namebox, xps.namebox, yps.namebox) end
+			lg.draw(textbox, xps.textbox, yps.textbox)
+			if print_full_text then lg.draw(gui.ctc, gui_ctc_x, 685) end
+			
+			lg.setColor(0,0,0,alpha)
+			lg.setFont(rifficfont)
+			outlineText(ct,xps.ct,yps.ct,'ct')
+			
+			if style_edited then
+				lg.setFont(dfnt)
+			else
+				lg.setFont(allerfont)
+			end
+			if g_system == 'PSP' then
+				xps.c = 240
+			end
+			if c_disp[1] then
+				outlineText(c_disp[1],xps.c,yps.c[1],'c_disp')
+			end
 		end
 	end
+end
+
+function drawHandheldMenu()
+	local items = itemnames or {}
+	if menu_type == 'choice' then items = choices end
+	if menu_type == 'dialog' then items = {tr.missing[2]} end
+	local title = menutext or ''
+	lg.push()
+	lg.origin()
+	lg.setColor(0,0,0,alpha*0.7)
+	lg.rectangle('fill',0,0,320,240)
+	lg.setColor(255,205,232,alpha)
+	lg.rectangle('fill',8,8,304,224,8,8)
+	lg.setColor(255,230,244,alpha)
+	lg.rectangle('fill',14,14,292,212,6,6)
+	local y = 22
+	if title ~= '' then
+		lg.setFont(ui_aller12)
+		local t = wrap(title,46)
+		local lines = 1 + select(2, string.gsub(t, "\n", "\n"))
+		lg.setColor(80,0,50,alpha)
+		lg.print(t,22,y)
+		y = y + lines*14 + 8
+	end
+	lg.setFont(ui_aller14)
+	for i=1,#items do
+		local selected = (m_selected == i+1)
+		local text = wrap(items[i] or '',40)
+		local lines = 1 + select(2, string.gsub(text, "\n", "\n"))
+		local h = lines*16 + 6
+		if selected then
+			lg.setColor(255,150,210,alpha)
+			lg.rectangle('fill',20,y,280,h,4,4)
+		else
+			lg.setColor(255,245,252,alpha*0.6)
+			lg.rectangle('fill',20,y,280,h,4,4)
+		end
+		lg.setColor(selected and 255 or 40, selected and 255 or 0, selected and 255 or 30, alpha)
+		lg.print(text,28,y+3)
+		y = y + h + 6
+	end
+	lg.pop()
 end
 
 function drawPoem()

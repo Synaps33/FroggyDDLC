@@ -4,7 +4,7 @@ local poemword = 1
 local progress = '1'
 local word = {}
 local wordr
-local wordpos = {x={455,455,455,455,455,675,675,675,675,675},
+local wordpos = {x={435,435,435,435,435,715,715,715,715,715},
 				 y={160,250,345,435,525,160,250,345,435,525}}
 local sPoint = 0
 local nPoint = 0

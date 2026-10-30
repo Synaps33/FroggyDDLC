@@ -64,11 +64,13 @@ function sfxplay(sfx) --sfx stuff
 end
 
 function sfxplay2(sfx)
-	local clone
-	if global_os == "LOVE-WrapLua" or g_system == "Switch" then
-		clone = sfx
+	if not sfx or not sfx.play then return end
+	if global_os == "LOVE-WrapLua" or g_system == "Switch" or g_system == "Handheld" then
+		sfx:play()
+	elseif sfx.clone then
+		local clone = sfx:clone()
+		if clone and clone.play then clone:play() end
 	else
-		clone = sfx:clone()
+		sfx:play()
 	end
-	clone:play()
 end

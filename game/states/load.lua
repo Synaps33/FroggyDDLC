@@ -29,7 +29,6 @@ end
 
 function updateLoad()
 	--love.filesystem.append("logfile",'l_timer: '..l_timer)
-	print('l_timer: '..l_timer)
 	if l_timer < 99 then
 		l_timer = l_timer + 1
 	end

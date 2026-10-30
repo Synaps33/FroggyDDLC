@@ -1,10 +1,28 @@
+# Game assets are distributed in the release packages, not in Git.
 assets*/
+game/assets/
+game/persistent
+game/settings.sav
+game/save*.sav
+game/logfile
+
+# Build output
 build/
-banner.bnr
-icon.icn
-*.3dsx
-*.cia
-*.db
-*.nro
-*.nacp
-*.smdh
+dist/
+cores/**/*.a
+*.a
+*.o
+*.so
+*.elf
+*.bin
+*.map
+
+# Local test output
+*.wav
+*.ppm
+screenshots_test/
+shots*/
+
+# Secrets and archives
+gh.txt
+*.zip

@@ -1,4 +1,4 @@
-dversion = "v1.2.2"
+dversion = "v1.2.3"
 dvertype = "" --put 'Test' for test mode
 print("DDLC-LOVE "..dversion..' '..dvertype)
 
@@ -19,7 +19,6 @@ math.random()
 local require_old = require
 function require(req)
 	--love.filesystem.append("logfile",'require: '..req)
-	print('require: '..req)
 	return require_old(req)
 end
 
@@ -56,7 +55,7 @@ function love.load()
 	if global_os ~= 'Horizon' and global_os ~= 'LOVE-WrapLua' then
 		--love.window.setFullscreen(true)
 		love.window.setTitle('DDLC-LOVE')
-		love.window.setMode(1280, 720)
+		love.window.setMode(320, 240)
 		love.keyboard.setTextInput(false)
 		--dwidth, dheight = love.window.getDesktopDimensions()
 	end
@@ -65,10 +64,8 @@ function love.load()
 end
 
 function love.draw()
-	--for pc stuff
-	if dwidth and dheight then
-		lg.scale(dwidth/1280,dheight/720)
-	end
+	lg.push()
+	lg.scale(0.25,0.3333333)
 	
 	if event_enabled then
 		event_draw()
@@ -89,6 +86,7 @@ function love.draw()
 	elseif state == 'credits' then
 		drawCredits()
 	end
+	lg.pop()
 end
 
 function love.update()
@@ -132,7 +130,7 @@ function love.update()
 end
 
 function love.keypressed(key)
-	if global_os ~= "LOVE-WrapLua" and g_system ~= "Switch" then
+	if global_os ~= "LOVE-WrapLua" and g_system ~= "Switch" and g_system ~= "Handheld" then
 		if key == "space" or key == "return" then
 			key = "a"
 		elseif key == "escape" or key == "backspace" then
@@ -150,7 +148,10 @@ function love.keypressed(key)
 		end
 	end
 	
-	if menu_enabled ~= true then
+	if state == 'title' and not keyboard then
+		menu_enabled = true
+		menu_keypressed(key)
+	elseif menu_enabled ~= true then
 		if state == 'splash' or state == 'splash2' then
 			splash_keypressed(key)
 		elseif state == 'game' then
@@ -182,14 +183,6 @@ function love.gamepadpressed(joy, button)
 		button = 'left'
 	elseif button == 'dpright' then
 		button = 'right'
-	elseif button == 'a' then
-		button = 'b'
-	elseif button == 'b' then
-		button = 'a'
-	elseif button == 'x' then
-		button = 'y'
-	elseif button == 'y' then
-		button = 'x'
 	end
 	love.keypressed(button)
 end

@@ -54,8 +54,13 @@ if not love.filesystem.load then
 end
 
 function love.filesystem.getInfo(file)
-	return love.filesystem.read(file)
+	local content = love.filesystem.read(file)
+	if content then
+		return {type = 'file', size = #content, modtime = 0}
+	end
+	return nil
 end
+
 
 function savegame(x)
 	local choiceset = ''

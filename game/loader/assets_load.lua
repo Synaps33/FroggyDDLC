@@ -5,9 +5,17 @@ function loaderAssets(l_timer)
 
 	--loading assets
 	if l_timer == 96 then
-		consolefont = lg.newFont('assets/fonts/F25_Bank_Printer.ttf',18)
-		allerfont = lg.newFont('assets/fonts/Aller_Rg.ttf',23)
+		local handheld = (g_system == 'Handheld')
+		consolefont = lg.newFont('assets/fonts/F25_Bank_Printer.ttf', handheld and 26 or 18)
+		allerfont = lg.newFont('assets/fonts/Aller_Rg.ttf', handheld and 34 or 23)
 		lg.setFont(allerfont)
+		if handheld then
+			ui_aller = lg.newFont('assets/fonts/Aller_Rg.ttf',16)
+			ui_aller14 = lg.newFont('assets/fonts/Aller_Rg.ttf',14)
+			ui_aller12 = lg.newFont('assets/fonts/Aller_Rg.ttf',12)
+			ui_riffic = lg.newFont('assets/fonts/RifficFree-Bold.ttf',16)
+			ui_mono = lg.newFont('assets/fonts/VerilySerifMono.ttf',16)
+		end
 
 	elseif l_timer == 97 then
 		sfx1 = love.audio.newSource('assets/audio/sfx/select'..audio_ext,'static')
@@ -35,12 +43,13 @@ function loaderAssets(l_timer)
 		gui.scrhover = lgnewImage('assets/images/gui/slider/horizontal_hover_thumb.png')
 		
 	elseif l_timer == 99 then
-		dfnt = lg.newFont('assets/fonts/VerilySerifMono.ttf',23) --act 2 "edited" text font
-		rifficfont = lg.newFont('assets/fonts/RifficFree-Bold.ttf',24) --charactername font
-		m1 = lg.newFont('assets/fonts/m1.ttf',30) --monika poem font
-		y1 = lg.newFont('assets/fonts/y1.ttf',33) --yuri poem font
-		s1 = lg.newFont('assets/fonts/s1.ttf',35) --sayori poem font
-		n1 = lg.newFont('assets/fonts/n1.ttf',24) --natsuki poem font
+		local handheld = (g_system == 'Handheld')
+		dfnt = lg.newFont('assets/fonts/VerilySerifMono.ttf', handheld and 34 or 23) --act 2 "edited" text font
+		rifficfont = lg.newFont('assets/fonts/RifficFree-Bold.ttf', handheld and 34 or 24) --charactername font
+		m1 = lg.newFont('assets/fonts/m1.ttf', handheld and 50 or 30) --monika poem font
+		y1 = lg.newFont('assets/fonts/y1.ttf', handheld and 52 or 33) --yuri poem font
+		s1 = lg.newFont('assets/fonts/s1.ttf', handheld and 54 or 35) --sayori poem font
+		n1 = lg.newFont('assets/fonts/n1.ttf', handheld and 40 or 24) --natsuki poem font
 		
 	elseif l_timer == 101 then
 		gui.mainbuttons = lgnewImage("assets/images/gui/"..settings.lang.."/mainbuttons.png")

@@ -143,7 +143,174 @@ function menu_drawstuff(a)
 	end
 end
 
+local function hh_panel()
+	lg.push()
+	lg.origin()
+	lg.setColor(0,0,0,alpha*0.65)
+	lg.rectangle('fill',0,0,320,240)
+	lg.setColor(255,205,232,menu_alpha)
+	lg.rectangle('fill',8,8,304,224,8,8)
+	lg.setColor(255,236,247,menu_alpha)
+	lg.rectangle('fill',14,14,292,212,6,6)
+end
+
+local function hh_footer(txt)
+	lg.setFont(ui_aller12)
+	lg.setColor(90,30,70,menu_alpha)
+	lg.print(txt or "A = Select    B = Back", 16, 218)
+	lg.pop()
+end
+
+local function hh_list(items, values, start_y, row_h)
+	local y = start_y or 44
+	local rh = row_h or 22
+	lg.setFont(ui_aller14)
+	for i=1,#items do
+		local selected = (m_selected == i+1)
+		if selected then
+			lg.setColor(255,150,205,menu_alpha)
+			lg.rectangle('fill',20,y-2,280,rh-2,4,4)
+			lg.setColor(255,255,255,menu_alpha)
+		else
+			lg.setColor(45,0,35,menu_alpha)
+		end
+		local label = items[i]
+		if values and values[i] then
+			if tostring(values[i]) == '>' then
+				label = label .. "  >"
+			else
+				label = label .. "  <  " .. tostring(values[i]) .. "  >"
+			end
+		end
+		lg.print(label, 28, y)
+		y = y + rh
+	end
+	return y
+end
+
+function menu_draw_handheld()
+	if not menu_alpha then menu_alpha = 255 end
+	hh_panel()
+	lg.setFont(ui_riffic)
+	lg.setColor(120,0,90,menu_alpha)
+	local title = "Menu"
+	if menu_type == 'pause' then title = "Paused"
+	elseif menu_type == 'settings' then title = "Settings"
+	elseif menu_type == 'savegame' then title = "Save Game"
+	elseif menu_type == 'loadgame' then title = "Load Game"
+	elseif menu_type == 'history' then title = "History"
+	elseif menu_type == 'help' then title = "Help"
+	elseif menu_type == 'characters' then title = "Characters"
+	end
+	lg.print(title, 18, 20)
+	lg.setColor(0,0,0,menu_alpha)
+	lg.rectangle('fill',18,38,284,1)
+
+	if menu_type == 'pause' then
+		local labels = {'History','Save Game','Load Game','Main Menu','Settings','Help','Quit','Return'}
+		hh_list(labels, nil, 48, 21)
+		hh_footer()
+
+	elseif menu_type == 'settings' then
+		local names = {'Text Speed','Auto-Forward','Characters','Language','Master Volume','Music Volume','Sound Volume'}
+		local vals = {settings.textspd, settings.autospd, '>', settings.lang, settings.masvol..'%', settings.bgmvol..'%', settings.sfxvol..'%'}
+		hh_list(names, vals, 52, 22)
+		hh_footer("D-Pad Left/Right = Change    A = Select    B = Back")
+
+	elseif menu_type == 'savegame' or menu_type == 'loadgame' then
+		for i=1,6 do
+			local col = (i-1) % 3
+			local row = math.floor((i-1)/3)
+			local x = 10 + col*101
+			local y = 44 + row*92
+			local selected = (m_selected == i+1)
+			if selected then
+				lg.setColor(255,150,205,menu_alpha)
+			else
+				lg.setColor(255,245,252,menu_alpha)
+			end
+			lg.rectangle('fill',x,y,97,86,4,4)
+			if save_bpic and save_bpic[i] and type(save_bpic[i]) == 'userdata' then
+				local iw = save_bpic[i]:getWidth()
+				local ih = save_bpic[i]:getHeight()
+				if iw > 0 and ih > 0 then
+					lg.setColor(255,255,255,menu_alpha)
+					lg.draw_raw(save_bpic[i], x+4, y+4, 0, 89/iw, 52/ih)
+				end
+			end
+			lg.setFont(ui_aller12)
+			lg.setColor(selected and 255 or 45, selected and 255 or 0, selected and 255 or 35, menu_alpha)
+			lg.print(savenum[i], x+5, y+4)
+			local dtxt = tostring(save_date[i] or 'empty slot')
+			lg.print(dtxt, x+5, y+60)
+		end
+		lg.setFont(ui_aller12)
+		lg.setColor(90,30,70,menu_alpha)
+		lg.print("Page "..pagenum.."    B = Back", 16, 218)
+		lg.pop()
+		lg.setFont(ui_aller12)
+		lg.setColor(90,30,70,menu_alpha)
+		lg.print("Page "..pagenum.."    B = Back", 16, 218)
+		lg.pop()
+
+	elseif menu_type == 'history' then
+		lg.setFont(ui_aller12)
+		local start = 1 + math.floor((history_scr + 39) * 0.25)
+		if start < 1 then start = 1 end
+		local y = 46
+		for i=start,#history do
+			if y > 208 then break end
+			local t = history[i]
+			if t and t ~= '' then
+				local w = wrap(t, 44)
+				lg.setColor(45,0,35,menu_alpha)
+				lg.print(w, 18, y)
+				local nl = 1 + select(2, string.gsub(w, "\n", "\n"))
+				y = y + nl*12 + 4
+			end
+		end
+		hh_footer("D-Pad Up/Down = Scroll    B = Back")
+
+	elseif menu_type == 'help' then
+		lg.setFont(ui_aller12)
+		lg.setColor(45,0,35,menu_alpha)
+		local lines = {
+			"A - Advance text / confirm",
+			"B - Hide text window / back",
+			"Y - Open the game menu",
+			"X - Toggle text outline",
+			"START - Auto-forward on/off",
+			"SELECT - Toggle text outline",
+			"D-Pad - Move selection / scroll",
+			"",
+			"Settings > Characters manages .chr files.",
+			"Saves are stored next to the game data."
+		}
+		local y = 50
+		for i=1,#lines do
+			lg.print(lines[i], 18, y)
+			y = y + 15
+		end
+		hh_footer()
+
+	elseif menu_type == 'characters' then
+		hh_list(itemnames, nil, 50, 24)
+		hh_footer()
+
+	else
+		hh_footer()
+	end
+end
+
 function menu_draw()
+	if g_system == 'Handheld' and (menu_type == 'choice' or menu_type == 'language' or menu_type == 'mainyesno' or menu_type == 'quityesno' or menu_type == 'dialog') then
+		drawHandheldMenu()
+		return
+	end
+	if g_system == 'Handheld' and (menu_type == 'pause' or menu_type == 'settings' or menu_type == 'savegame' or menu_type == 'loadgame' or menu_type == 'history' or menu_type == 'help' or menu_type == 'characters') then
+		menu_draw_handheld()
+		return
+	end
 	lg.setColor(255,255,255,menu_alpha)
 	
 	if menu_type == 'title' then
@@ -611,6 +778,9 @@ function m_select(arg)
 end
 
 function menu_keypressed(key)
+	if not m_selected or type(m_selected) ~= 'number' then
+		m_selected = 2
+	end
 	if key == 'down' then
 		if menu_type ~= 'history' and menu_type ~= 'savegame' and menu_type ~= 'loadgame' then
 			sfxplay2(sfx2)
