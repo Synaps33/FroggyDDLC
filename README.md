@@ -1,5 +1,7 @@
 # FroggyDDLC
 
+**☕ Support the project:** [ko-fi.com/sajnaps](https://ko-fi.com/sajnaps)
+
 An unofficial, complete port of **Doki Doki Literature Club!** to the Data Frog
 **GB300** and **SF2000** handhelds.
 
